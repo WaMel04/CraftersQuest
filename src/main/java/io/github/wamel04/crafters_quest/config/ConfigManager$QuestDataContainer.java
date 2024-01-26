@@ -25,8 +25,6 @@ public class ConfigManager$QuestDataContainer {
 
     public static CompletableFuture<QuestDataContainer> load(String uuid) {
         return CompletableFuture.supplyAsync(() -> {
-            QuestDataContainer.questDataContainerMap.clear();
-
             File file = new File(plugin.getDataFolder() + "/quest_data", uuid + ".yml");
 
             Map<Quest, QuestData> questDataMap = new HashMap<>();
