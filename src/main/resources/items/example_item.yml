@@ -1,0 +1,30 @@
+# CraftersQuest Plugin by WaMel_ (Discord: wamel04)
+
+# '&'를 색상코드로 사용할 수 있습니다.
+
+# ========================================= ##### Item Example ##### =========================================
+
+crystal:
+  type: "DIAMOND" # 아이템의 material입니다.
+  name: "&b크리스탈" # 아이템의 이름입니다.
+  lore: # 아이템의 로어입니다.
+    - "&b푸른빛이 일렁이는 진귀한 보석이다."
+  custom-model-data: 0 # 아이템의 커스텀 모델 데이터입니다.
+  enchantments: # 아이템의 인챈트 목록입니다.
+    - "LUCK 5"
+
+ruby:
+  type: "REDSTONE" # 아이템의 material입니다.
+  name: # 아무것도 입력하지 않을 시 이름을 부여하지 않습니다.
+  lore: # 아무것도 입력하지 않을 시 로어를 부여하지 않습니다.
+  custom-model-data: 0
+  enchantments: # 아무것도 입력하지 않을 시 인챈트를 부여하지 않습니다.
+
+prism_chestplate:
+  type: "DIAMOND_CHESTPLATE"
+  name: "<color:00CED1>프리즘 갑옷"
+  lore:
+    - "&f은은하게 빛이 나는 진귀한 갑옷이다."
+  custom-model-data: 0
+  enchantments:
+    - "PROTECTION 5"

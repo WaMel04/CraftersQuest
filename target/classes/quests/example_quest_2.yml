@@ -1,0 +1,34 @@
+# CraftersQuest Plugin by WaMel_ (Discord: wamel04)
+
+# 퀘스트의 category는 상위 폴더의 이름입니다.
+# '&'를 색상코드로 사용할 수 있습니다.
+
+# ========================================= ##### Quest Example ##### =========================================
+
+# 퀘스트의 이름입니다.
+name: "예시_퀘스트_2"
+
+# 퀘스트의 취소 가능 여부입니다.
+cancellable: true
+
+# 해당 퀘스트를 완료하는데 필요한 조건들입니다.
+conditions:
+  break_block_cond:
+    trigger-condition: "BREAK_BLOCK 'DIRT' '15'"
+    name: "흙 캐기"
+    progress-operations:
+      - "$send '%condition_name% 진행 중... &7(%current_progress%/%max_progress%) &8(%progress_percent%%)'"
+    complete-operations:
+      - "$send '&f흙을 많이 캤다.'"
+  talk_cond:
+    trigger-condition: "PLACE_BLOCK 'DIRT' '15'"
+    name: "다시 흙 설치하기"
+    progress-operations:
+      - "$actionbar '%condition_name% 진행 중... &7(%current_progress%/%max_progress%) &8(%progress_percent%%)'"
+    complete-operations:
+      - "$send '&f흙을 다시 설치했다. 정말 의미 없는 행동인 것 같다.'"
+
+# 퀘스트를 완료할 시 실행되는 명령의 목록입니다.
+quest-complete-operations:
+  - "$title '&a&l축하합니다!' '&f%quest_name% 퀘스트를 완료하셨습니다.' '3' '10' '10'"
+  - "$bossbar 'WHITE' 'SOLID' '10' '&c%remaining_time%초 후 보스바가 사라집니다.'"

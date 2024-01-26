@@ -1,0 +1,33 @@
+# CraftersQuest Plugin by WaMel_ (Discord: wamel04)
+
+# 퀘스트의 category는 상위 폴더의 이름입니다.
+# '&'를 색상코드로 사용할 수 있습니다.
+# MineDown과 PlaceHolderAPI를 지원합니다.
+
+# ========================================= ##### Quest Example ##### =========================================
+
+# 퀘스트의 이름입니다.
+name: "예시_퀘스트_1"
+
+# 퀘스트의 취소 가능 여부입니다.
+cancellable: true
+
+# 해당 퀘스트를 완료하는데 필요한 조건들입니다.
+conditions:
+  command_cond:
+    trigger-condition: "COMMAND 'me'"
+    name: "자기 자랑하기"
+    complete-operations:
+      - "$send '&f자기 자랑을 하시다니, 자기 자신을 사랑하시는군요.'"
+      - "$send '&f당신을 더 뽐낼 수 있는 갑옷을 선물로 드릴께요!'"
+      - "$give 'prism_chestplate' '1'"
+  equip_cond:
+    trigger-condition: "EQUIP 'prism_chestplate'"
+    name: "프리즘 갑옷 장착하기"
+    complete-operation:
+      - "$send '&f갑옷을 입으니 더 멋져보이시네요!'"
+
+# 퀘스트를 완료할 시 실행되는 명령의 목록입니다.
+quest-complete-operations:
+  - "$send '&6%quest_name% 퀘스트&f를 완료하셨습니다.'"
+  - "$chance_give '50' 'crystal' '3' '<none>' '0'"

@@ -1,0 +1,24 @@
+name: CraftersQuest
+version: '1.0'
+main: io.github.wamel04.crafters_quest.CraftersQuestPlugin
+api-version: '1.20'
+
+commands:
+  q:
+    description: "현재 진행 중인 퀘스트 목록을 확인합니다."
+  quest:
+    description: "현재 진행 중인 퀘스트 목록을 확인합니다."
+  퀘스트:
+    description: "현재 진행 중인 퀘스트 목록을 확인합니다."
+
+  pq:
+    description: "클리어한 퀘스트 목록을 확인합니다."
+  pquest:
+    description: "클리어한 퀘스트 목록을 확인합니다."
+  이전퀘스트:
+    description: "클리어한 퀘스트 목록을 확인합니다."
+
+  getqueststate:
+    description: "플레이어의 퀘스트 상태를 확인합니다."
+  setqueststate:
+    description: "플레이어의 퀘스트 상태를 설정합니다."
