@@ -29,9 +29,9 @@ public class QuestDataContainer {
     }
 
     private String owner;
-    private Map<Quest, QuestData> questDataMap;
+    private Map<String, QuestData> questDataMap;
 
-    public QuestDataContainer(String owner, Map<Quest, QuestData> questDataMap) {
+    public QuestDataContainer(String owner, Map<String, QuestData> questDataMap) {
         this.owner = owner;
         this.questDataMap = questDataMap;
     }
@@ -40,7 +40,7 @@ public class QuestDataContainer {
         return owner;
     }
 
-    public Map<Quest, QuestData> getQuestDataMap() {
+    public Map<String, QuestData> getQuestDataMap() {
         return questDataMap;
     }
 
@@ -48,7 +48,7 @@ public class QuestDataContainer {
      * QuestState를 반환합니다.
      */
     public QuestState getQuestState(Quest quest) {
-        QuestData questData = questDataMap.get(quest);
+        QuestData questData = questDataMap.get(quest.getId());
 
         return questData.getQuestState();
     }
@@ -57,17 +57,17 @@ public class QuestDataContainer {
      * QuestState를 설정합니다.
      */
     public void setQuestState(Quest quest, QuestState questState) {
-        QuestData questData = questDataMap.get(quest);
+        QuestData questData = questDataMap.get(quest.getId());
         questData.setQuestState(questState);
 
-        questDataMap.put(quest, questData);
+        questDataMap.put(quest.getId(), questData);
     }
 
     /**
      * QuestCondition의 현재 진척도를 반환합니다.
      */
     public int getQuestConditionCurrentProgress(QuestCondition questCondition) {
-        QuestConditionData questConditionData = questDataMap.get(questCondition.getQuest()).getQuestConditionDataMap().get(questCondition.getId());
+        QuestConditionData questConditionData = questDataMap.get(questCondition.getQuest().getId()).getQuestConditionDataMap().get(questCondition.getId());
         return questConditionData.getCurrentProgress();
     }
 
@@ -75,7 +75,7 @@ public class QuestDataContainer {
      * QuestCondition의 최대 진척도를 반환합니다.
      */
     public int getQuestConditionMaxProgress(QuestCondition questCondition) {
-        QuestConditionData questConditionData = questDataMap.get(questCondition.getQuest()).getQuestConditionDataMap().get(questCondition.getId());
+        QuestConditionData questConditionData = questDataMap.get(questCondition.getQuest().getId()).getQuestConditionDataMap().get(questCondition.getId());
         return questConditionData.getMaxProgress();
     }
 
@@ -83,7 +83,7 @@ public class QuestDataContainer {
      * QuestCondition의 현재 진척률을 반환합니다.
      */
     public double getQuestConditionProgressPercent(QuestCondition questCondition) {
-        QuestConditionData questConditionData = questDataMap.get(questCondition.getQuest()).getQuestConditionDataMap().get(questCondition.getId());
+        QuestConditionData questConditionData = questDataMap.get(questCondition.getQuest().getId()).getQuestConditionDataMap().get(questCondition.getId());
         return questConditionData.getProgressPercent();
     }
 
@@ -95,12 +95,12 @@ public class QuestDataContainer {
     public boolean progressQuestCondition(Player player, QuestCondition questCondition) {
         Quest quest = questCondition.getQuest();
 
-        if (!questDataMap.get(quest).getQuestConditionDataMap().containsKey(questCondition.getId()))
+        if (!questDataMap.get(quest.getId()).getQuestConditionDataMap().containsKey(questCondition.getId()))
             return false;
         if (!getQuestState(quest).equals(QuestState.PROCEEDING))
             return false;
 
-        QuestConditionData questConditionData = questDataMap.get(quest).getQuestConditionDataMap().get(questCondition.getId());
+        QuestConditionData questConditionData = questDataMap.get(quest.getId()).getQuestConditionDataMap().get(questCondition.getId());
 
         if (questConditionData.isCompleted())
             return false;
@@ -131,12 +131,12 @@ public class QuestDataContainer {
     public boolean completeQuestCondition(Player player, QuestCondition questCondition) {
         Quest quest = questCondition.getQuest();
 
-        if (!questDataMap.get(quest).getQuestConditionDataMap().containsKey(questCondition.getId()))
+        if (!questDataMap.get(quest.getId()).getQuestConditionDataMap().containsKey(questCondition.getId()))
             return false;
         if (!getQuestState(quest).equals(QuestState.PROCEEDING))
             return false;
 
-        QuestConditionData questConditionData = questDataMap.get(quest).getQuestConditionDataMap().get(questCondition.getId());
+        QuestConditionData questConditionData = questDataMap.get(quest.getId()).getQuestConditionDataMap().get(questCondition.getId());
 
         if (questConditionData.isCompleted())
             return false;
@@ -153,7 +153,7 @@ public class QuestDataContainer {
             }
         }
 
-        for (QuestConditionData qcd : questDataMap.get(quest).getQuestConditionDataMap().values()) {
+        for (QuestConditionData qcd : questDataMap.get(quest.getId()).getQuestConditionDataMap().values()) {
             if (qcd.isCompleted() == false)
                 return true;
         }
@@ -169,12 +169,11 @@ public class QuestDataContainer {
      * @return 실패 여부
      */
     public boolean completeQuest(Player player, Quest quest, QuestCondition questCondition) {
-        if (!questDataMap.containsKey(quest))
+        if (!questDataMap.containsKey(quest.getId()))
             return false;
 
-        QuestData questData = questDataMap.get(quest);
+        QuestData questData = questDataMap.get(quest.getId());
         questData.setQuestState(QuestState.COMPLETED);
-        questDataMap.put(quest, questData);
 
         if (player != null && !quest.getQuestCompleteOperations().isEmpty()) {
             for (String ops : quest.getQuestCompleteOperationStrings()) {
@@ -194,12 +193,11 @@ public class QuestDataContainer {
      * @return 실패 여부
      */
     public boolean revokeQuest(Quest quest) {
-        if (!questDataMap.containsKey(quest))
+        if (!questDataMap.containsKey(quest.getId()))
             return false;
 
-        QuestData questData = questDataMap.get(quest);
+        QuestData questData = questDataMap.get(quest.getId());
         questData.setQuestState(QuestState.NOT_REQUESTED);
-        questDataMap.put(quest, questData);
 
         return true;
     }

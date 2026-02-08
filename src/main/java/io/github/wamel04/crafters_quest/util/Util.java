@@ -1,10 +1,16 @@
 package io.github.wamel04.crafters_quest.util;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 
+import java.net.URL;
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -14,18 +20,30 @@ public class Util {
     public static ItemStack getSkull(String url, String name, String... lores) {
         String s = "http://textures.minecraft.net/texture/" + url;
 
-        ItemStack skull = SkullCreator.itemFromUrl(s);
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
 
         if (name != null) {
-            ItemMeta meta = skull.getItemMeta();
             meta.setDisplayName(name);
             skull.setItemMeta(meta);
         }
         if (lores != null) {
-            ItemMeta meta = skull.getItemMeta();
             meta.setLore(Arrays.stream(lores).collect(Collectors.toList()));
             skull.setItemMeta(meta);
         }
+
+        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID(), "");
+        PlayerTextures textures = profile.getTextures();
+
+        try {
+            textures.setSkin(new URL(s));
+            meta.setOwnerProfile(profile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        skull.setItemMeta(meta);
         return skull;
     }
 

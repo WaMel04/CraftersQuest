@@ -72,7 +72,7 @@ public class QuestGUIListener implements Listener {
                     Quest quest = Quest.questMap.get(questId);
 
                     if (!quest.isCancellable()) {
-                        player.sendMessage("§6[CraftersQuest] §e" + quest.getName() + " 퀘스트§f는 취소가 불가능합니다.");
+                        player.sendMessage("§6[CraftersQuest] §e" + quest.getName() + " 퀘스트§f는 포기가 불가능합니다.");
                         return;
                     }
 
@@ -80,6 +80,7 @@ public class QuestGUIListener implements Listener {
                             .thenRunAsync(() -> {
                                 pagePlayers.add(player);
                                 questGUI.open(player, questGUI.getCurrentPage());
+                                player.sendMessage("§6[CraftersQuest] §e" + quest.getName() + " 퀘스트§f를 포기했습니다.");
                             }).exceptionally(
                                     ex -> {
                                         ex.printStackTrace();

@@ -14,7 +14,7 @@ public class ProgressTriggerCondition extends TriggerCondition {
 
     public CompletableFuture<Integer> getCurrentProgress(String uuid, QuestCondition questCondition) {
         return QuestDataContainer.get(uuid)
-                .thenApplyAsync(questDataContainer -> questDataContainer.getQuestDataMap().get(questCondition.getQuest())
+                .thenApplyAsync(questDataContainer -> questDataContainer.getQuestDataMap().get(questCondition.getQuest().getId())
                         .getQuestConditionDataMap().get(questCondition.getId())
                         .getCurrentProgress())
                 .exceptionally(ex -> {

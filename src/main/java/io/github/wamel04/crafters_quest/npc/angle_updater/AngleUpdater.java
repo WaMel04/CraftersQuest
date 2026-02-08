@@ -13,7 +13,9 @@ import java.util.Map;
 
 public class AngleUpdater {
 
-    public static final double MAX_DISTANCE = 4;
+    public static final double MAX_YAW_DIFFERENCE = 30;
+    public static final double MAX_PITCH_DIFFERENCE = 15;
+    public static final double MIN_DIFFERENCE = 4;
     public static Map<Player, AngleUpdater> playerMap = new HashMap<>();
 
     private Player player;
@@ -30,15 +32,16 @@ public class AngleUpdater {
         task = new BukkitRunnable() {
             PersonalAngleUpdater pAngleUpdater = new PersonalAngleUpdater(player, target, player, 0.05, true);
             PersonalAngleUpdater eAngleUpdater = new PersonalAngleUpdater(target, player, player, 0.05, false);
+            
             @Override
             public void run() {
                 if (!player.getWorld().equals(target.getWorld())
-                || player.getLocation().distance(target.getLocation()) > MAX_DISTANCE
+                || player.getLocation().distance(target.getLocation()) > MIN_DIFFERENCE
                 || !QuestNPC.playerTalkingNPCMap.containsKey(player)) {
                     stop();
                     return;
                 }
-
+                
                 pAngleUpdater.updateAngle();
                 eAngleUpdater.updateAngle();
             }

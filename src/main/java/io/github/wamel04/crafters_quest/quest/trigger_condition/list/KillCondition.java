@@ -21,8 +21,6 @@ public class KillCondition extends ProgressTriggerCondition {
 
     @EventHandler
     public void onKill(EntityDeathEvent event) {
-        if (event.isCancelled())
-            return;
         if (event.getEntity().getKiller() == null)
             return;
 

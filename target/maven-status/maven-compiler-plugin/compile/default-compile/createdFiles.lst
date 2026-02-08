@@ -9,6 +9,7 @@ io\github\wamel04\crafters_quest\npc\QuestNPC.class
 io\github\wamel04\crafters_quest\operation\list\ConsoleCommandOperation.class
 io\github\wamel04\crafters_quest\operation\list\PlayerCommandOperation.class
 io\github\wamel04\crafters_quest\npc\page_condition\PageCondition$Separator.class
+io\github\wamel04\crafters_quest\command\CMD_QuestReload.class
 io\github\wamel04\crafters_quest\quest\trigger_condition\list\KillCondition.class
 io\github\wamel04\crafters_quest\quest\trigger_condition\TriggerCondition.class
 io\github\wamel04\crafters_quest\npc\angle_updater\PersonalAngleUpdater.class
@@ -45,7 +46,6 @@ io\github\wamel04\crafters_quest\operation\list\SetQuestStateOperation.class
 io\github\wamel04\crafters_quest\command\CMD_GetQuestState.class
 io\github\wamel04\crafters_quest\operation\list\BossbarOperation$1.class
 io\github\wamel04\crafters_quest\quest\trigger_condition\list\CommandCondition.class
-io\github\wamel04\crafters_quest\util\SkullCreator.class
 io\github\wamel04\crafters_quest\CraftersQuestPlugin.class
 io\github\wamel04\crafters_quest\file_util\FileManager.class
 io\github\wamel04\crafters_quest\operation\OperationRegister.class

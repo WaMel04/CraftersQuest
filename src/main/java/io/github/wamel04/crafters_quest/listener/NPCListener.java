@@ -1,6 +1,5 @@
 package io.github.wamel04.crafters_quest.listener;
 
-import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.github.wamel04.crafters_quest.CraftersQuestAPI;
 import io.github.wamel04.crafters_quest.npc.QuestNPC;
 import io.github.wamel04.crafters_quest.npc.angle_updater.AngleUpdater;
@@ -9,10 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 
 public class NPCListener implements Listener {
@@ -59,8 +55,11 @@ public class NPCListener implements Listener {
     }
 
     @EventHandler
-    public void onJump(PlayerJumpEvent event) {
-        CraftersQuestAPI.unTalk(event.getPlayer());
+    public void onJump(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+
+        if (event.getFrom().getBlockY() < event.getTo().getBlockY() && !player.isSwimming() && !player.isFlying())
+            CraftersQuestAPI.unTalk(player);
     }
 
     @EventHandler

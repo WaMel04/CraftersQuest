@@ -22,7 +22,6 @@ C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\craft
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\operation\list\ConsoleCommandOperation.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\quest\QuestState.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\quest\trigger_condition\ProgressTriggerCondition.java
-C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\util\SkullCreator.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\file_util\JarUtil.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\quest\trigger_condition\list\CommandCondition.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\config\ConfigManager$Quest.java
@@ -36,6 +35,7 @@ C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\craft
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\quest\trigger_condition\list\TalkCondition.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\CraftersQuestPlugin.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\operation\list\ChanceGiveOperation.java
+C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\command\CMD_QuestReload.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\operation\list\PageOperation.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\operation\Operation.java
 C:\Users\navyg\day-workspace\CraftersQuest\src\main\java\io\github\wamel04\crafters_quest\operation\list\PlayerCommandOperation.java

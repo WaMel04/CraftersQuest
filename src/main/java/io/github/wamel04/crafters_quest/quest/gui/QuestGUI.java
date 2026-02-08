@@ -30,6 +30,9 @@ public class QuestGUI {
     private static ItemStack leftArrow = Util.getSkull("bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9", "§c<- 이전 페이지", null);
     private static ItemStack rightArrow = Util.getSkull("19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf", "§a다음 페이지 ->", null);
 
+    //private static ItemStack leftArrow = new ItemStack(Material.ARROW);
+    //private static ItemStack rightArrow = new ItemStack(Material.ARROW);
+
     private String owner;
     private int currentPage;
 
@@ -64,7 +67,7 @@ public class QuestGUI {
                             break;
 
                         Quest quest = proceedingQuests.get(j);
-                        QuestData questData = questDataContainer.getQuestDataMap().get(quest);
+                        QuestData questData = questDataContainer.getQuestDataMap().get(quest.getId());
 
                         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK, 1);
                         ItemMeta itemMeta = item.getItemMeta();

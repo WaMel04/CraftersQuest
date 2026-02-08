@@ -64,7 +64,7 @@ public class PreviousQuestGUI {
                             break;
 
                         Quest quest = completedQuests.get(j);
-                        QuestData questData = questDataContainer.getQuestDataMap().get(quest);
+                        QuestData questData = questDataContainer.getQuestDataMap().get(quest.getId());
 
                         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK, 1);
                         ItemMeta itemMeta = item.getItemMeta();

@@ -96,7 +96,7 @@ public class QuestNPC {
     public void unTalk(Player player) {
         playerTalkingNPCMap.remove(player);
         playerNextPageMap.remove(player);
-        Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> player.removePotionEffect(PotionEffectType.SLOW));
+        Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> player.removePotionEffect(PotionEffectType.SLOWNESS));
     }
 
     public String getPlayerNextPage(Player player) {

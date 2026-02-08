@@ -19,11 +19,13 @@ public class PersonalAngleUpdater {
     private double sensitivity;
     private boolean isSelf;
 
-    Float currentYaw;
-    Float currentPitch;
+    private Float currentYaw;
+    private Float currentPitch;
 
-    float targetYaw;
-    float targetPitch;
+    private float targetYaw;
+    private float targetPitch;
+
+    private boolean isDone = false;
 
     public PersonalAngleUpdater(Entity entity, Entity target, Player forPlayer, double sensitivity, boolean isSelf) {
         this.entity = entity;
@@ -34,7 +36,7 @@ public class PersonalAngleUpdater {
         this.isSelf = isSelf;
 
         if (entity instanceof Player)
-            Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, -1, 3, false, false)));
+            Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, -1, 3, false, false)));
 
         calculate();
     }
@@ -48,8 +50,8 @@ public class PersonalAngleUpdater {
         targetPitch = (float) (Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz))) * -1);
 
         if (isSelf || currentYaw == null) {
-            currentYaw = entity.getYaw();
-            currentPitch = entity.getPitch();
+            currentYaw = entity.getLocation().getYaw();
+            currentPitch = entity.getLocation().getPitch();
         }
 
         if (targetYaw - currentYaw > 180)
@@ -63,10 +65,14 @@ public class PersonalAngleUpdater {
     }
 
     public void updateAngle() {
-        if (Math.abs(targetYaw - currentYaw) <= AngleUpdater.MAX_DISTANCE && Math.abs(targetPitch - currentPitch) <= AngleUpdater.MAX_DISTANCE) {
-            sensitivity = initSensitivity;
-
+        if (isDone) {
             calculate();
+
+            if (Math.abs(targetYaw - currentYaw) >= AngleUpdater.MAX_YAW_DIFFERENCE || Math.abs(targetPitch - currentPitch) >= AngleUpdater.MAX_PITCH_DIFFERENCE) {
+                isDone = false;
+                sensitivity = initSensitivity;
+            }
+
             return;
         }
 
@@ -83,11 +89,21 @@ public class PersonalAngleUpdater {
 
         currentPitch += changePitch;
 
+        if (Math.abs(targetYaw - currentYaw) <= AngleUpdater.MIN_DIFFERENCE && Math.abs(targetPitch - currentPitch) <= AngleUpdater.MIN_DIFFERENCE) {
+            if (isSelf)
+                isDone = true;
+
+            sensitivity = initSensitivity;
+
+            calculate();
+            return;
+        }
         if (isSelf) {
-            PacketContainer teleportPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.POSITION);
-            teleportPacket.getIntegers().write(0, 0);
-            teleportPacket.getModifier().write(3, changeYaw);
-            teleportPacket.getModifier().write(4, changePitch);
+            PacketContainer teleportPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_ROTATION);
+
+            // 1.21.4, protocolLib 5.4.0
+            teleportPacket.getFloat().write(0, currentYaw);
+            teleportPacket.getFloat().write(1, currentPitch);
             ProtocolLibrary.getProtocolManager().sendServerPacket(forPlayer, teleportPacket);
         } else {
             PacketContainer bodyPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_LOOK);
@@ -102,6 +118,11 @@ public class PersonalAngleUpdater {
             ProtocolLibrary.getProtocolManager().sendServerPacket(forPlayer, headPacket);
         }
 
-        sensitivity *= 1.1;
+        sensitivity *= 1.01;
     }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
 }

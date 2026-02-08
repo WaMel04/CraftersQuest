@@ -1,0 +1,4 @@
+# CraftersQuest Plugin by WaMel_ (Discord: wamel04)
+
+# 플레이어 데이터를 백업할 주기를 정합니다. (단위: 분)
+backup-time: 60

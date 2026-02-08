@@ -1,9 +1,11 @@
 name: CraftersQuest
 version: '${project.version}'
 main: io.github.wamel04.crafters_quest.CraftersQuestPlugin
-api-version: '1.20'
+api-version: '1.21'
 author: "WaMel_"
 description: "Quest Plugin for Crafters"
+depend:
+  - ProtocolLib
 
 commands:
   q:
@@ -24,3 +26,8 @@ commands:
     description: "플레이어의 퀘스트 상태를 확인합니다."
   setqueststate:
     description: "플레이어의 퀘스트 상태를 설정합니다."
+
+  qreload:
+    description: "config와 커스텀 파일들을 다시 불러옵니다."
+  questreload:
+    description: "config와 커스텀 파일들을 다시 불러옵니다."

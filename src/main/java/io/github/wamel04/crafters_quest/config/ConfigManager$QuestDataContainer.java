@@ -27,7 +27,7 @@ public class ConfigManager$QuestDataContainer {
         return CompletableFuture.supplyAsync(() -> {
             File file = new File(plugin.getDataFolder() + "/quest_data", uuid + ".yml");
 
-            Map<Quest, QuestData> questDataMap = new HashMap<>();
+            Map<String, QuestData> questDataMap = new HashMap<>();
 
             if (!file.exists()) {
                 for (Quest quest : Quest.questMap.values()) {
@@ -51,7 +51,7 @@ public class ConfigManager$QuestDataContainer {
                     }
 
                     QuestData questData = new QuestData(quest, QuestState.NOT_REQUESTED, null, questConditionDataMap);
-                    questDataMap.put(quest, questData);
+                    questDataMap.put(quest.getId(), questData);
                 }
             } else {
                 YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
@@ -72,7 +72,7 @@ public class ConfigManager$QuestDataContainer {
                         }
 
                         QuestData questData = new QuestData(quest, QuestState.NOT_REQUESTED, null, questConditionDataMap);
-                        questDataMap.put(quest, questData);
+                        questDataMap.put(quest.getId(), questData);
 
                         continue;
                     }
@@ -115,7 +115,7 @@ public class ConfigManager$QuestDataContainer {
                     }
 
                     QuestData questData = new QuestData(quest, questState, completedDate, questConditionDataMap);
-                    questDataMap.put(quest, questData);
+                    questDataMap.put(quest.getId(), questData);
                 }
             }
 
@@ -140,10 +140,10 @@ public class ConfigManager$QuestDataContainer {
 
             QuestDataContainer questDataContainer = QuestDataContainer.questDataContainerMap.get(uuid);
 
-            for (Quest quest : questDataContainer.getQuestDataMap().keySet()) {
-                QuestData questData = questDataContainer.getQuestDataMap().get(quest);
+            for (String questId : questDataContainer.getQuestDataMap().keySet()) {
+                QuestData questData = questDataContainer.getQuestDataMap().get(questId);
 
-                ConfigurationSection questSection = questListSection.createSection(quest.getId());
+                ConfigurationSection questSection = questListSection.createSection(questId);
                 questSection.set("quest-state", questData.getQuestState().name());
 
                 if (questData.getCompletedDate() != null)

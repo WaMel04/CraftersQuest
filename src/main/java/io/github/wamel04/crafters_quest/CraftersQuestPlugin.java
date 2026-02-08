@@ -1,9 +1,6 @@
 package io.github.wamel04.crafters_quest;
 
-import io.github.wamel04.crafters_quest.command.CMD_GetQuestState;
-import io.github.wamel04.crafters_quest.command.CMD_PreviousQuest;
-import io.github.wamel04.crafters_quest.command.CMD_Quest;
-import io.github.wamel04.crafters_quest.command.CMD_SetQuestState;
+import io.github.wamel04.crafters_quest.command.*;
 import io.github.wamel04.crafters_quest.config.ConfigManager$CraftersNPC;
 import io.github.wamel04.crafters_quest.config.ConfigManager$Item;
 import io.github.wamel04.crafters_quest.config.ConfigManager$Quest;
@@ -16,8 +13,19 @@ import io.github.wamel04.crafters_quest.listener.QuestGUIListener;
 import io.github.wamel04.crafters_quest.operation.OperationRegister;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerConditionRegister;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 public final class CraftersQuestPlugin extends JavaPlugin {
 
@@ -30,6 +38,10 @@ public final class CraftersQuestPlugin extends JavaPlugin {
 
     private static CraftersQuestPlugin instance;
 
+    private static int BACKUP_TIME = 60;
+    private static BukkitTask backupTask;
+
+
     @Override
     public void onEnable() {
         instance = this;
@@ -40,7 +52,10 @@ public final class CraftersQuestPlugin extends JavaPlugin {
         registerListeners();
         registerCommands();
 
+        saveDefaultConfig();
         FileManager.init();
+
+        loadConfig();
 
         TriggerConditionRegister.start();
         OperationRegister.start();
@@ -79,6 +94,56 @@ public final class CraftersQuestPlugin extends JavaPlugin {
 
         instance.getCommand("getqueststate").setExecutor(new CMD_GetQuestState());
         instance.getCommand("setqueststate").setExecutor(new CMD_SetQuestState());
+
+        instance.getCommand("qreload").setExecutor(new CMD_QuestReload());
+        instance.getCommand("questreload").setExecutor(new CMD_QuestReload());
+    }
+
+    public static void loadConfig() {
+        File configFile = new File(instance.getDataFolder(), "config.yml");
+        BACKUP_TIME = Optional.of(YamlConfiguration.loadConfiguration(configFile).getInt("backup-time"))
+                .filter(v -> v > 0)
+                .orElse(60);
+
+        if (backupTask != null)
+            backupTask.cancel();
+
+        backupTask = startBackupTask(BACKUP_TIME);
+    }
+
+    private static BukkitTask startBackupTask(int backupTime) {
+        return Bukkit.getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                ConfigManager$QuestDataContainer.save(player.getUniqueId().toString());
+            }
+
+            String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+            File sourceDir = new File(instance.getDataFolder(), "quest_data");
+            File backupDir = new File(instance.getDataFolder(), "backups" + File.separator + timeStamp);
+
+            // 3. 폴더 복사 실행
+            if (sourceDir.exists()) {
+                try {
+                    Files.walk(sourceDir.toPath()).forEach(path -> {
+                        try {
+                            Path dest = backupDir.toPath().resolve(sourceDir.toPath().relativize(path));
+                            if (Files.isDirectory(path)) {
+                                Files.createDirectories(dest);
+                            } else {
+                                Files.copy(path, dest, StandardCopyOption.REPLACE_EXISTING);
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                    Bukkit.getConsoleSender().sendMessage("§6[CraftersQuest] 플레이어 데이터를 백업했습니다. (" + timeStamp + ")");
+                } catch (IOException e) {
+                    Bukkit.getConsoleSender().sendMessage("§c[CraftersQuest] 백업 중 오류가 발생했습니다! (" + e.getMessage() + ")");
+                    e.printStackTrace();
+                }
+            }
+
+        }, 20 * 60 * backupTime, 20 * 60 * backupTime);
     }
 
 }
