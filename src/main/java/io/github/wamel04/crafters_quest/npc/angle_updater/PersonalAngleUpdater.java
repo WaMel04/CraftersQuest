@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -36,7 +37,7 @@ public class PersonalAngleUpdater {
         this.isSelf = isSelf;
 
         if (entity instanceof Player)
-            Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, -1, 3, false, false)));
+            Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.getByKey(NamespacedKey.minecraft("slowness")), -1, 3, false, false)));
 
         calculate();
     }
@@ -99,12 +100,23 @@ public class PersonalAngleUpdater {
             return;
         }
         if (isSelf) {
-            PacketContainer teleportPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_ROTATION);
+            if (Bukkit.getBukkitVersion().contains("1.21")) {
+                PacketContainer teleportPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_ROTATION);
 
-            // 1.21.4, protocolLib 5.4.0
-            teleportPacket.getFloat().write(0, currentYaw);
-            teleportPacket.getFloat().write(1, currentPitch);
-            ProtocolLibrary.getProtocolManager().sendServerPacket(forPlayer, teleportPacket);
+                // 1.21.4, protocolLib 5.4.0
+                teleportPacket.getFloat().write(0, currentYaw);
+                teleportPacket.getFloat().write(1, currentPitch);
+                ProtocolLibrary.getProtocolManager().sendServerPacket(forPlayer, teleportPacket);
+            } else {
+                PacketContainer teleportPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.POSITION);
+                teleportPacket.getIntegers().write(0, Integer.valueOf(0));
+                teleportPacket.getDoubles().write(0, Double.valueOf(forPlayer.getLocation().getX()));
+                teleportPacket.getDoubles().write(1, Double.valueOf(forPlayer.getLocation().getY()));
+                teleportPacket.getDoubles().write(2, Double.valueOf(forPlayer.getLocation().getZ()));
+                teleportPacket.getFloat().write(0, currentYaw);
+                teleportPacket.getFloat().write(1, currentPitch);
+                ProtocolLibrary.getProtocolManager().sendServerPacket(forPlayer, teleportPacket);
+            }
         } else {
             PacketContainer bodyPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_LOOK);
             bodyPacket.getIntegers().write(0, entity.getEntityId());

@@ -23,7 +23,7 @@ public class PreviousQuestGUIListener implements Listener {
 
         PreviousQuestGUI questGUI = PreviousQuestGUI.openGuiMap.get(player);
 
-        String title = event.getView().getOriginalTitle();
+        String title = event.getView().getTitle();
 
         if (!title.startsWith("§0§l클리어한 퀘스트 목록"))
             return;

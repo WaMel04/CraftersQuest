@@ -11,7 +11,7 @@ crystal:
     - "&b푸른빛이 일렁이는 진귀한 보석이다."
   custom-model-data: 0 # 아이템의 커스텀 모델 데이터입니다.
   enchantments: # 아이템의 인챈트 목록입니다.
-    - "LUCK 5"
+    - "FORTUNE 5" # 마인크래프트의 기본 인첸트명을 따라갑니다.
 
 ruby:
   type: "REDSTONE" # 아이템의 material입니다.

@@ -4,6 +4,7 @@ import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import io.github.wamel04.crafters_quest.npc.page_condition.PageCondition;
 import io.github.wamel04.crafters_quest.operation.Operation;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -96,7 +97,7 @@ public class QuestNPC {
     public void unTalk(Player player) {
         playerTalkingNPCMap.remove(player);
         playerNextPageMap.remove(player);
-        Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> player.removePotionEffect(PotionEffectType.SLOWNESS));
+        Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> player.removePotionEffect(PotionEffectType.getByKey(NamespacedKey.minecraft("slowness"))));
     }
 
     public String getPlayerNextPage(Player player) {

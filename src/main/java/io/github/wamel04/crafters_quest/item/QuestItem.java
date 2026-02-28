@@ -2,6 +2,7 @@ package io.github.wamel04.crafters_quest.item;
 
 import io.github.wamel04.crafters_quest.util.Util;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -50,7 +51,11 @@ public class QuestItem {
 
         for (String enchantmentString : enchantments) {
             String[] parts = enchantmentString.split("\\s+");
-            Enchantment enchantment = Enchantment.getByName(parts[0]);
+            Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(parts[0].toLowerCase()));
+
+            if (enchantment == null)
+                continue;
+
             int level = Integer.parseInt(parts[1]);
             meta.addEnchant(enchantment, level, true);
         }
