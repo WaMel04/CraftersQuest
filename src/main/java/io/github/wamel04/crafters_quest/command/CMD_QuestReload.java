@@ -4,9 +4,13 @@ import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import io.github.wamel04.crafters_quest.config.ConfigManager$CraftersNPC;
 import io.github.wamel04.crafters_quest.config.ConfigManager$Item;
 import io.github.wamel04.crafters_quest.config.ConfigManager$Quest;
+import io.github.wamel04.crafters_quest.config.ConfigManager$QuestDataContainer;
+import io.github.wamel04.crafters_quest.quest.QuestDataContainer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -23,9 +27,20 @@ public class CMD_QuestReload implements CommandExecutor {
         long startTime = System.currentTimeMillis();
 
         CompletableFuture.runAsync(() -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                ConfigManager$QuestDataContainer.save(player.getUniqueId().toString()).join();
+            }
+
             ConfigManager$Quest.load().join();
             ConfigManager$Item.load().join();
             ConfigManager$CraftersNPC.load().join();
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                ConfigManager$QuestDataContainer.load(player.getUniqueId().toString())
+                        .thenAcceptAsync(questDataContainer ->
+                                QuestDataContainer.questDataContainerMap.put(player.getUniqueId().toString(), questDataContainer))
+                        .join();
+            }
 
             sender.sendMessage("§6성공적으로 파일들을 불러왔습니다! §7(경과 시간: " + (System.currentTimeMillis() - startTime) + "ms)");
         });
