@@ -5,6 +5,7 @@ io\github\wamel04\crafters_quest\quest\trigger_condition\TriggerConditionRegiste
 io\github\wamel04\crafters_quest\quest\trigger_condition\list\PlaceBlockCondition.class
 io\github\wamel04\crafters_quest\operation\list\GiveOperation.class
 io\github\wamel04\crafters_quest\quest\trigger_condition\TriggerConditionType.class
+io\github\wamel04\crafters_quest\operation\list\OpCommandOperation.class
 io\github\wamel04\crafters_quest\npc\QuestNPC.class
 io\github\wamel04\crafters_quest\operation\list\ConsoleCommandOperation.class
 io\github\wamel04\crafters_quest\operation\list\PlayerCommandOperation.class
