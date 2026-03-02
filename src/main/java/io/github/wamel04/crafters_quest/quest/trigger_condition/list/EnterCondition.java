@@ -1,8 +1,5 @@
 package io.github.wamel04.crafters_quest.quest.trigger_condition.list;
 
-import io.github.wamel04.crafters_quest.quest.Quest;
-import io.github.wamel04.crafters_quest.quest.QuestDataContainer;
-import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerConditionType;
 import org.bukkit.Location;
@@ -23,24 +20,15 @@ public class EnterCondition extends TriggerCondition {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        Location location = event.getTo();
+        Location from = event.getFrom();
+        Location to = event.getTo();
 
-        for (Quest quest : Quest.questMap.values()) {
-            for (QuestCondition questCondition : quest.getQuestConditionMap().values()) {
-                if (!questCondition.getTriggerCondition().getSymbol().equalsIgnoreCase(symbol))
-                    continue;
+        if (to == null || (from.getBlockX() == to.getBlockX()
+                && from.getBlockY() == to.getBlockY()
+                && from.getBlockZ() == to.getBlockZ()))
+            return;
 
-                if (isLocationInRange(location, questCondition.getTriggerConditionString())) {
-                    QuestDataContainer.get(player.getUniqueId().toString())
-                            .thenAcceptAsync(questDataContainer -> questDataContainer.completeQuestCondition(player, questCondition))
-                            .exceptionally(ex -> {
-                                        ex.printStackTrace();
-                                        return null;
-                                    }
-                            );
-                }
-            }
-        }
+        match(player, this, condStr -> isLocationInRange(to, condStr));
     }
 
     private boolean isLocationInRange(Location location, String conditionString) {

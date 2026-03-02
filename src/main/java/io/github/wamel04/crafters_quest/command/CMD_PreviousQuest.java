@@ -1,5 +1,6 @@
 package io.github.wamel04.crafters_quest.command;
 
+import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import io.github.wamel04.crafters_quest.quest.gui.PreviousQuestGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -20,11 +21,11 @@ public class CMD_PreviousQuest implements CommandExecutor {
         if (args.length == 0) {
             Player player = (Player) sender;
 
-            PreviousQuestGUI questGUI = new PreviousQuestGUI(player.getUniqueId().toString());
-            questGUI.open(player, 1);
+            PreviousQuestGUI questGUI = new PreviousQuestGUI(player.getUniqueId().toString(), 1);
+            questGUI.open(player);
         } else {
             if (!sender.isOp()) {
-                sender.sendMessage("§c권한이 부족합니다.");
+                sender.sendMessage(CraftersQuestPlugin.PREFIX + "§c권한이 부족합니다.");
                 return false;
             }
 
@@ -44,8 +45,8 @@ public class CMD_PreviousQuest implements CommandExecutor {
                     uuid = target.getUniqueId().toString();
                 }
 
-                PreviousQuestGUI questGUI = new PreviousQuestGUI(uuid);
-                questGUI.open(player, 1);
+                PreviousQuestGUI questGUI = new PreviousQuestGUI(uuid, 1);
+                questGUI.open(player);
             }).exceptionally(
                     ex -> {
                         ex.printStackTrace();

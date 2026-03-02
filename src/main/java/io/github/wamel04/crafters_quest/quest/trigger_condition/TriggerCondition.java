@@ -1,9 +1,14 @@
 package io.github.wamel04.crafters_quest.quest.trigger_condition;
 
+import io.github.wamel04.crafters_quest.quest.Quest;
+import io.github.wamel04.crafters_quest.quest.QuestDataContainer;
+import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +76,36 @@ public abstract class TriggerCondition implements Listener {
         }
 
         return factorMap;
+    }
+
+    /**
+     * 트리거 컨디션의 이벤트를 호출시킨 플레이어가 이를 충족시킬 수 있으면, 컨디션을 완료(진척)합니다.
+     */
+    protected void match(Player player, TriggerCondition condition, Predicate<String> matcher) {
+        QuestDataContainer.get(player.getUniqueId().toString())
+                .thenAcceptAsync(qdc -> {
+                    for (Quest quest : qdc.getProceedingQuests()) {
+                        for (QuestCondition questCondition : quest.getQuestConditionMap().values()) {
+                            if (!questCondition.getTriggerCondition().getSymbol().equalsIgnoreCase(condition.getSymbol()))
+                                continue;
+
+                            String conditionStr = questCondition.getTriggerConditionString();
+
+                            if (matcher.test(conditionStr)) {
+                                if (condition instanceof ProgressTriggerCondition) {
+                                    qdc.progressQuestCondition(player, questCondition);
+                                } else {
+                                    qdc.completeQuestCondition(player, questCondition);
+                                }
+                            }
+                        }
+                    }
+                })
+                .exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
+
     }
 
 }

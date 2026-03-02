@@ -27,6 +27,20 @@ commands:
   setqueststate:
     description: "플레이어의 퀘스트 상태를 설정합니다."
 
+  questitem:
+    description: "등록된 퀘스트 아이템의 목록을 확인합니다."
+  qitem:
+    description: "등록된 퀘스트 아이템의 목록을 확인합니다."
+  qi:
+    description: "등록된 퀘스트 아이템의 목록을 확인합니다."
+
+  registerquestitem:
+    description: "들고 있는 아이템을 퀘스트 아이템 목록에 등록합니다."
+  rqitem:
+    description: "들고 있는 아이템을 퀘스트 아이템 목록에 등록합니다."
+  rqi:
+    description: "들고 있는 아이템을 퀘스트 아이템 목록에 등록합니다."
+
   qreload:
     description: "config와 커스텀 파일들을 다시 불러옵니다."
   questreload:

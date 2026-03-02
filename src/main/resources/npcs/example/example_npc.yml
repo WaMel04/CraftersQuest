@@ -34,6 +34,7 @@ permission: "disabled"
 first-page-conditions:
   "NOT_REQUESTED example_quest_1": "eq1_page_1"
   "COMPLETED example_quest_1 && NOT_REQUESTED example_quest_2": "eq2_page_1"
+  "COMPLETED example_quest_2 && NOT_REQUESTED example_quest_3": "eq3_page_1"
   "DEFAULT": "default_page_1"
 
 # NPC와 대화 중 나오는 페이지를 설정합니다.
@@ -52,6 +53,10 @@ pages:
   "eq2_page_2":
     - "$send '&6흙&f을 부쉈다가, 다시 설치해보세요.'"
     - "$set_quest_state 'example_quest_2' 'PROCEEDING'"
+    - "$exit"
+  "eq3_page_1":
+    - "$send '&f생일 축하하세요! 저에게 생일 선물을 모아 주시면 돼요.'"
+    - "$set_quest_state 'example_quest_3' 'PROCEEDING'"
     - "$exit"
   "default_page_1":
     - "$send '안녕하세요, 저는 예시 NPC입니다.'"

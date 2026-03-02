@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class ConfigManager$Quest {
 
@@ -46,7 +47,9 @@ public class ConfigManager$Quest {
 
             String questId = file.getName().replace(".yml", "");
             String name = Util.getColoredString(yaml.getString("name"));
-
+            List<String> descriptions = yaml.getStringList("descriptions").stream()
+                    .map(Util::getColoredString)
+                    .collect(Collectors.toList());
             boolean cancellable = yaml.getBoolean("cancellable");
 
             Map<String, QuestCondition> questConditionMap = new HashMap<>();
@@ -55,18 +58,23 @@ public class ConfigManager$Quest {
             for (String conditionId : conditionListSection.getKeys(false)) {
                 ConfigurationSection conditionSection = conditionListSection.getConfigurationSection(conditionId);
                 String conditionName = Util.getColoredString(conditionSection.getString("name"));
+
+                List<String> conditionDescriptions = conditionSection.getStringList("condition-descriptions").stream()
+                        .map(Util::getColoredString)
+                        .collect(Collectors.toList());
+
                 String triggerCondition = conditionSection.getString("trigger-condition");
 
                 List<String> progressOperationStrings = conditionSection.getStringList("progress-operations");
                 List<String> completeOperationStrings = conditionSection.getStringList("complete-operations");
 
-                QuestCondition questCondition = new QuestCondition(conditionId, conditionName, triggerCondition, progressOperationStrings, completeOperationStrings, questId);
+                QuestCondition questCondition = new QuestCondition(conditionId, conditionName, conditionDescriptions, triggerCondition, progressOperationStrings, completeOperationStrings, questId);
                 questConditionMap.put(conditionId, questCondition);
             }
 
             List<String> questCompleteOperationStrings = yaml.getStringList("quest-complete-operations");
 
-            Quest.questMap.put(questId, new Quest(questId, name, category, cancellable, questConditionMap, questCompleteOperationStrings));
+            Quest.questMap.put(questId, new Quest(questId, name, category, descriptions, cancellable, questConditionMap, questCompleteOperationStrings));
         }).exceptionally(
                 ex -> {
                     ex.printStackTrace();

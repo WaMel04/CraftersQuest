@@ -1,8 +1,5 @@
 package io.github.wamel04.crafters_quest.quest.trigger_condition.list;
 
-import io.github.wamel04.crafters_quest.quest.Quest;
-import io.github.wamel04.crafters_quest.quest.QuestDataContainer;
-import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerConditionType;
 import org.bukkit.entity.Player;
@@ -29,24 +26,11 @@ public class CommandCondition extends TriggerCondition {
             command = event.getMessage().substring(1);
         }
 
-        for (Quest quest : Quest.questMap.values()) {
-            for (QuestCondition questCondition : quest.getQuestConditionMap().values()) {
-                if (!questCondition.getTriggerCondition().getSymbol().equalsIgnoreCase(symbol))
-                    continue;
+        match(player, this, condStr -> {
+            String cCommand = getFactorMap(condStr, "command").get("command");
 
-                String cCommand = getFactorMap(questCondition.getTriggerConditionString(), "command").get("command");
-
-                if (command.equalsIgnoreCase(cCommand)) {
-                    QuestDataContainer.get(player.getUniqueId().toString())
-                            .thenAcceptAsync(questDataContainer -> questDataContainer.completeQuestCondition(player, questCondition))
-                            .exceptionally(ex -> {
-                                        ex.printStackTrace();
-                                        return null;
-                                    }
-                            );
-                }
-            }
-        }
+            return command.equalsIgnoreCase(cCommand);
+        });
     }
 
 

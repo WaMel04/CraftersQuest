@@ -48,6 +48,9 @@ public class Util {
     }
 
     public static String getColoredString(String s) {
+        if (s == null)
+            return null;
+
         s = s.replace("&", "§");
 
         String regex = "<color:(\\w+)>";

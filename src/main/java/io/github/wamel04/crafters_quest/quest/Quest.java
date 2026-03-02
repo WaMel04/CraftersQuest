@@ -16,13 +16,15 @@ public class Quest {
     private String name;
     private String category;
     private boolean cancellable;
+    private List<String> descriptions;
     private Map<String, QuestCondition> questConditionMap;
     private List<String> questCompleteOperationStrings;
 
-    public Quest(String id, String name, String category, boolean cancellable, Map<String, QuestCondition> questConditionMap, List<String> questCompleteOperationStrings) {
+    public Quest(String id, String name, String category, List<String> descriptions, boolean cancellable, Map<String, QuestCondition> questConditionMap, List<String> questCompleteOperationStrings) {
         this.id = id;
         this.name = name;
         this.category = category;
+        this.descriptions = descriptions;
         this.cancellable = cancellable;
         this.questConditionMap = questConditionMap;
         this.questCompleteOperationStrings = questCompleteOperationStrings;
@@ -38,6 +40,10 @@ public class Quest {
 
     public String getCategory() {
         return category;
+    }
+
+    public List<String> getDescriptions() {
+        return descriptions;
     }
 
     public boolean isCancellable() {

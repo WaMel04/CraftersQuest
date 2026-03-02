@@ -22,8 +22,8 @@ public class ChanceGiveOperation extends Operation {
 
         double chance = Double.parseDouble(factorMap.get("chance"));
 
-        ItemStack item1 = getItem(factorMap.get("item_1"), Integer.parseInt(factorMap.get("amount_1")));
-        ItemStack item2 = getItem(factorMap.get("item_2"), Integer.parseInt(factorMap.get("amount_2")));
+        ItemStack item1 = getItem(factorMap.get("item_1").toLowerCase(), Integer.parseInt(factorMap.get("amount_1")));
+        ItemStack item2 = getItem(factorMap.get("item_2").toLowerCase(), Integer.parseInt(factorMap.get("amount_2")));
 
         ItemStack giveItem;
 

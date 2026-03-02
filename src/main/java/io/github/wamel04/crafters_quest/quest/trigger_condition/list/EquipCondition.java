@@ -2,9 +2,6 @@ package io.github.wamel04.crafters_quest.quest.trigger_condition.list;
 
 import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import io.github.wamel04.crafters_quest.item.QuestItem;
-import io.github.wamel04.crafters_quest.quest.Quest;
-import io.github.wamel04.crafters_quest.quest.QuestDataContainer;
-import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerConditionType;
 import org.bukkit.Bukkit;
@@ -47,7 +44,7 @@ public class EquipCondition extends TriggerCondition {
                 if (item.getType().equals(Material.AIR)) {
                     check(player, player.getInventory().getItemInOffHand().clone());
                 } else if (item.getType().name().contains("HELMET") || item.getType().name().contains("CHESTPLATE")
-                || item.getType().name().contains("LEGGINGS") || item.getType().name().contains("BOOTS") || item.getType().name().contains("ELYTRA")) {
+                        || item.getType().name().contains("LEGGINGS") || item.getType().name().contains("BOOTS") || item.getType().name().contains("ELYTRA")) {
                     check(player, item);
                 }
             } else {
@@ -130,32 +127,23 @@ public class EquipCondition extends TriggerCondition {
                     changeItem = player.getInventory().getBoots();
                 }
                 if (currentItem.equals(changeItem)) {
-                    for (Quest quest : Quest.questMap.values()) {
-                        for (QuestCondition questCondition : quest.getQuestConditionMap().values()) {
-                            if (!questCondition.getTriggerCondition().getSymbol().equalsIgnoreCase(symbol))
-                                continue;
+                    match(player, this, condStr -> {
+                        String cItemName = getFactorMap(condStr, "itemName").get("itemName").toLowerCase();
 
-                            String cItemName = getFactorMap(questCondition.getTriggerConditionString(), "itemName").get("itemName");
+                        if (QuestItem.questItemMap.containsKey(cItemName)) {
+                            QuestItem questItem = QuestItem.questItemMap.get(cItemName);
 
-                            if (QuestItem.questItemMap.containsKey(cItemName)) {
-                                QuestItem questItem = QuestItem.questItemMap.get(cItemName);
-
-                                if (!questItem.toItemStack().isSimilar(currentItem))
-                                    return;
-                            } else if (!(cItemName.equalsIgnoreCase(currentItem.getType().name()) || cItemName.equals(ChatColor.stripColor(currentItem.getItemMeta().getDisplayName())))) {
-                                return;
-                            }
-
-
-                            QuestDataContainer.get(player.getUniqueId().toString())
-                                    .thenAcceptAsync(questDataContainer -> questDataContainer.completeQuestCondition(player, questCondition))
-                                    .exceptionally(ex -> {
-                                                ex.printStackTrace();
-                                                return null;
-                                            }
-                                    );
+                            return questItem != null && questItem.toItemStack().isSimilar(currentItem);
                         }
-                    }
+                        if (cItemName.equalsIgnoreCase(currentItem.getType().name())) {
+                            return true;
+                        }
+                        if (currentItem.hasItemMeta() && currentItem.getItemMeta().hasDisplayName()) {
+                            return cItemName.equals(ChatColor.stripColor(currentItem.getItemMeta().getDisplayName()));
+                        }
+
+                        return false;
+                    });
                 }
             }
         }, 1);

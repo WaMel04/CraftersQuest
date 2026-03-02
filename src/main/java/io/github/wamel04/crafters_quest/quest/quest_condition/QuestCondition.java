@@ -11,14 +11,16 @@ public class QuestCondition {
 
     String id;
     String name;
+    List<String> descriptions;
     String triggerConditionString;
     List<String> progressOperationStrings;
     List<String> completeOperationStrings;
     String questId;
 
-    public QuestCondition(String id, String name, String triggerConditionString, List<String> progressOperationStrings, List<String> completeOperationStrings, String questId) {
+    public QuestCondition(String id, String name, List<String> descriptions, String triggerConditionString, List<String> progressOperationStrings, List<String> completeOperationStrings, String questId) {
         this.id = id;
         this.name = name;
+        this.descriptions = descriptions;
         this.triggerConditionString = triggerConditionString;
         this.progressOperationStrings = progressOperationStrings;
         this.completeOperationStrings = completeOperationStrings;
@@ -31,6 +33,10 @@ public class QuestCondition {
 
     public String getName() {
         return name;
+    }
+
+    public List<String> getDescriptions() {
+        return descriptions;
     }
 
     public String getTriggerConditionString() {

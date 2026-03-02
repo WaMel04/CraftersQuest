@@ -24,7 +24,7 @@ public class GiveOperation extends Operation {
     public void execute(Player player, String operationString, QuestCondition questCondition) {
         Map<String, String> factorMap = getFactorMap(operationString, "item", "amount");
 
-        String itemString = factorMap.get("item");
+        String itemString = factorMap.get("item").toLowerCase();
         int amount = Integer.parseInt(factorMap.get("amount"));
 
         ItemStack item;

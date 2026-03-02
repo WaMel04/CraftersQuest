@@ -18,31 +18,25 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PreviousQuestGUI {
 
-    public static Map<Player, PreviousQuestGUI> openGuiMap = new HashMap<>();
+    public static Map<UUID, PreviousQuestGUI> openGuiMap = new HashMap<>();
 
     private static ItemStack leftArrow = Util.getSkull("bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9", "§c<- 이전 페이지", null);
     private static ItemStack rightArrow = Util.getSkull("19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf", "§a다음 페이지 ->", null);
 
     private String owner;
-    private int currentPage;
+    private int page;
 
-    public PreviousQuestGUI(String owner) {
+    public PreviousQuestGUI(String owner, int page) {
         this.owner = owner;
+        this.page = page;
     }
 
-    public void open(Player player, Integer page) {
-        if (page == null)
-            page = 1;
-
-        currentPage = page;
-        openGuiMap.put(player, this);
+    public void open(Player player) {
+        openGuiMap.put(player.getUniqueId(), this);
 
         Inventory inventory = Bukkit.createInventory(null, 54, "§0§l클리어한 퀘스트 목록 (" + page + ")");
 
@@ -59,7 +53,7 @@ public class PreviousQuestGUI {
                     }
 
                     int slot = 0;
-                    for (int j = 45 * (currentPage - 1); j<45 * currentPage; j++) {
+                    for (int j = 45 * (page - 1); j<45 * page; j++) {
                         if (completedQuests.size() <= j)
                             break;
 
@@ -73,9 +67,16 @@ public class PreviousQuestGUI {
                         List<String> descriptions = new ArrayList<>();
                         descriptions.add("");
                         descriptions.add(ChatColor.of("#7B68EE") + "카테고리: " + quest.getCategory());
-                        descriptions.add("");
-
                         descriptions.add(ChatColor.of("#A52A2A") + "cancellable: " + quest.isCancellable());
+
+                        if (!quest.getDescriptions().isEmpty()) {
+                            descriptions.add("");
+                            descriptions.add(ChatColor.of("#00FDC2") + "<설명>");
+                            for (String des : quest.getDescriptions()) {
+                                descriptions.add("§7" + des);
+                            }
+                        }
+
                         descriptions.add("");
 
                         for (QuestConditionData questConditionData : questData.getQuestConditionDataMap().values()) {
@@ -83,6 +84,15 @@ public class PreviousQuestGUI {
                             String conditionName = questConditionData.getQuestCondition().getName();
 
                             descriptions.add(ChatColor.of("#808000") + "- " + conditionName + ":");
+
+                            if (!questCondition.getDescriptions().isEmpty()) {
+                                descriptions.add(ChatColor.of("#00FDC2") + "   <설명> ");
+                                for (String des : questCondition.getDescriptions()) {
+                                    descriptions.add(ChatColor.of("#00FDC2") + "   §f" + des);
+                                }
+                                descriptions.add("");
+                            }
+
                             descriptions.add(ChatColor.of("#BDB76B") + "   trigger_condition: " + questCondition.getTriggerConditionString());
 
                             if (questCondition.getTriggerCondition().getType().equals(TriggerConditionType.PROGRESSIVE))
@@ -125,8 +135,12 @@ public class PreviousQuestGUI {
         return owner;
     }
 
-    public int getCurrentPage() {
-        return currentPage;
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
     }
 
 }

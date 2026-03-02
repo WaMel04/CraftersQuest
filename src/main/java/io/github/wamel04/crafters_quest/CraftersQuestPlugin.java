@@ -1,5 +1,6 @@
 package io.github.wamel04.crafters_quest;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import io.github.wamel04.crafters_quest.command.*;
 import io.github.wamel04.crafters_quest.config.ConfigManager$CraftersNPC;
 import io.github.wamel04.crafters_quest.config.ConfigManager$Item;
@@ -8,9 +9,11 @@ import io.github.wamel04.crafters_quest.config.ConfigManager$QuestDataContainer;
 import io.github.wamel04.crafters_quest.file_util.FileManager;
 import io.github.wamel04.crafters_quest.listener.NPCListener;
 import io.github.wamel04.crafters_quest.listener.PlayerListener;
-import io.github.wamel04.crafters_quest.listener.PreviousQuestGUIListener;
-import io.github.wamel04.crafters_quest.listener.QuestGUIListener;
 import io.github.wamel04.crafters_quest.operation.OperationRegister;
+import io.github.wamel04.crafters_quest.quest.gui.listener.PreviousQuestGUIListener;
+import io.github.wamel04.crafters_quest.quest.gui.listener.QuestGUIListener;
+import io.github.wamel04.crafters_quest.quest.gui.listener.QuestItemGUIListener;
+import io.github.wamel04.crafters_quest.quest.gui.listener.QuestItemMenuGUIListener;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerConditionRegister;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -41,6 +44,7 @@ public final class CraftersQuestPlugin extends JavaPlugin {
     private static int BACKUP_TIME = 60;
     private static BukkitTask backupTask;
 
+    public static final String PREFIX = "§6[CraftersQuest] §f";
 
     @Override
     public void onEnable() {
@@ -70,6 +74,8 @@ public final class CraftersQuestPlugin extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             ConfigManager$QuestDataContainer.save(player.getUniqueId().toString());
         }
+
+        ProtocolLibrary.getProtocolManager().removePacketListeners(this);
     }
 
     public static CraftersQuestPlugin getInstance() {
@@ -81,6 +87,8 @@ public final class CraftersQuestPlugin extends JavaPlugin {
         instance.getServer().getPluginManager().registerEvents(new NPCListener(), instance);
         instance.getServer().getPluginManager().registerEvents(new QuestGUIListener(), instance);
         instance.getServer().getPluginManager().registerEvents(new PreviousQuestGUIListener(), instance);
+        instance.getServer().getPluginManager().registerEvents(new QuestItemMenuGUIListener(), instance);
+        instance.getServer().getPluginManager().registerEvents(new QuestItemGUIListener(), instance);
     }
 
     private static void registerCommands() {
@@ -94,6 +102,14 @@ public final class CraftersQuestPlugin extends JavaPlugin {
 
         instance.getCommand("getqueststate").setExecutor(new CMD_GetQuestState());
         instance.getCommand("setqueststate").setExecutor(new CMD_SetQuestState());
+
+        instance.getCommand("questitem").setExecutor(new CMD_QuestItem());
+        instance.getCommand("qitem").setExecutor(new CMD_QuestItem());
+        instance.getCommand("qi").setExecutor(new CMD_QuestItem());
+
+        instance.getCommand("registerquestitem").setExecutor(new CMD_RegisterQuestItem());
+        instance.getCommand("rqitem").setExecutor(new CMD_RegisterQuestItem());
+        instance.getCommand("rqi").setExecutor(new CMD_RegisterQuestItem());
 
         instance.getCommand("qreload").setExecutor(new CMD_QuestReload());
         instance.getCommand("questreload").setExecutor(new CMD_QuestReload());
@@ -136,9 +152,9 @@ public final class CraftersQuestPlugin extends JavaPlugin {
                             throw new RuntimeException(e);
                         }
                     });
-                    Bukkit.getConsoleSender().sendMessage("§6[CraftersQuest] 플레이어 데이터를 백업했습니다. (" + timeStamp + ")");
+                    Bukkit.getConsoleSender().sendMessage(PREFIX + "§6플레이어 데이터를 백업했습니다. (" + timeStamp + ")");
                 } catch (IOException e) {
-                    Bukkit.getConsoleSender().sendMessage("§c[CraftersQuest] 백업 중 오류가 발생했습니다! (" + e.getMessage() + ")");
+                    Bukkit.getConsoleSender().sendMessage(PREFIX + "§6백업 중 오류가 발생했습니다! (" + e.getMessage() + ")");
                     e.printStackTrace();
                 }
             }

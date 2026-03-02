@@ -1,8 +1,5 @@
 package io.github.wamel04.crafters_quest.quest.trigger_condition.list;
 
-import io.github.wamel04.crafters_quest.quest.Quest;
-import io.github.wamel04.crafters_quest.quest.QuestDataContainer;
-import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.ProgressTriggerCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerConditionType;
 import org.bukkit.Material;
@@ -25,24 +22,11 @@ public class PlaceBlockCondition extends ProgressTriggerCondition {
         Player player = event.getPlayer();
         Material type = event.getBlock().getType();
 
-        for (Quest quest : Quest.questMap.values()) {
-            for (QuestCondition questCondition : quest.getQuestConditionMap().values()) {
-                if (!questCondition.getTriggerCondition().getSymbol().equalsIgnoreCase(symbol))
-                    continue;
+        match(player, this, condStr -> {
+            Material cType = Material.getMaterial(getFactorMap(condStr, "type", "amount").get("type"));
 
-                Material cType = Material.getMaterial(getFactorMap(questCondition.getTriggerConditionString(), "type", "amount").get("type"));
-
-                if (type.equals(cType)) {
-                    QuestDataContainer.get(player.getUniqueId().toString())
-                            .thenAcceptAsync(questDataContainer -> questDataContainer.progressQuestCondition(player, questCondition))
-                            .exceptionally(ex -> {
-                                        ex.printStackTrace();
-                                        return null;
-                                    }
-                            );
-                }
-            }
-        }
+            return type.equals(cType);
+        });
     }
 
 }

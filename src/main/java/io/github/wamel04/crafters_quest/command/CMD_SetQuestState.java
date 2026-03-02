@@ -1,6 +1,7 @@
 package io.github.wamel04.crafters_quest.command;
 
 import io.github.wamel04.crafters_quest.CraftersQuestAPI;
+import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import io.github.wamel04.crafters_quest.quest.Quest;
 import io.github.wamel04.crafters_quest.quest.QuestState;
 import org.bukkit.Bukkit;
@@ -24,11 +25,11 @@ public class CMD_SetQuestState implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if (!sender.isOp()) {
-            sender.sendMessage("§c권한이 부족합니다.");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§c권한이 부족합니다.");
             return false;
         }
         if (args.length < 3) {
-            sender.sendMessage("§6/setqueststate [닉네임] [퀘스트] [상태] §7- 플레이어의 퀘스트 상태를 설정합니다.");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§f/setqueststate [닉네임] [퀘스트] [상태] §7- 플레이어의 퀘스트 상태를 설정합니다.");
             return false;
         }
 
@@ -39,7 +40,7 @@ public class CMD_SetQuestState implements TabExecutor {
         Player target = Bukkit.getPlayer(nick);
 
         if (!Quest.questMap.containsKey(questName)) {
-            sender.sendMessage("§e" + questName + " §6퀘스트는 존재하지 않습니다.");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§e" + questName + "§f은(는) 존재하지 않는 퀘스트입니다.");
             return false;
         }
 
@@ -48,7 +49,7 @@ public class CMD_SetQuestState implements TabExecutor {
         try {
             questState = QuestState.valueOf(state);
         } catch (Exception e) {
-            sender.sendMessage("§e" + state + " §6는 올바른 퀘스트 상태가 아닙니다.");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§e" + state + "§f은(는) 올바른 퀘스트 상태가 아닙니다.");
             return false;
         }
         CompletableFuture.runAsync(() -> {
@@ -66,7 +67,7 @@ public class CMD_SetQuestState implements TabExecutor {
             CraftersQuestAPI.setQuestState(uuid, questName, questState);
 
             if (sender instanceof Player)
-                sender.sendMessage("§e" + nickname + " §6님의 §e" + questName + " §6퀘스트 상태를 §e" + questState.name() + "§6(으)로 설정했습니다.");
+                sender.sendMessage(CraftersQuestPlugin.PREFIX + "§7" + nickname + " §f님의 §e" + questName + " §f퀘스트 상태를 §6" + questState.name() + "§f(으)로 설정했습니다.");
         }).exceptionally(
                 ex -> {
                     ex.printStackTrace();

@@ -6,7 +6,9 @@ import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
 import io.github.wamel04.crafters_quest.quest.quest_condition.QuestConditionData;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -93,6 +95,15 @@ public class QuestDataContainer {
      * @return 실패 여부
      */
     public boolean progressQuestCondition(Player player, QuestCondition questCondition) {
+        return progressQuestCondition(player, questCondition, 1);
+    }
+
+    /**
+     * QuestCondition을 진척시킵니다.
+     * @param player null일 시 QuestCondition#ProgressOperation이 실행되지 않습니다.
+     * @return 실패 여부
+     */
+    public boolean progressQuestCondition(Player player, QuestCondition questCondition, int count) {
         Quest quest = questCondition.getQuest();
 
         if (!questDataMap.get(quest.getId()).getQuestConditionDataMap().containsKey(questCondition.getId()))
@@ -105,7 +116,7 @@ public class QuestDataContainer {
         if (questConditionData.isCompleted())
             return false;
 
-        questConditionData.progress();
+        questConditionData.progress(count);
 
         if (questConditionData.getMaxProgress() != -1) {
             if (player != null && !questCondition.getProgressOperations().isEmpty()) {
@@ -200,6 +211,26 @@ public class QuestDataContainer {
         questData.setQuestState(QuestState.NOT_REQUESTED);
 
         return true;
+    }
+
+    /**
+     * 플레이어가 진행 중인 퀘스트 목록을 가져옵니다.
+     * @since 2026-08-05
+     * @return 퀘스트 list
+     */
+    public List<Quest> getProceedingQuests() {
+        List<Quest> quests = new ArrayList<>();
+
+        for (Map.Entry<String, QuestData> entry : questDataMap.entrySet()) {
+            QuestData questData = entry.getValue();
+
+            if (questData.getQuestState().equals(QuestState.PROCEEDING)) {
+                Quest quest = Quest.questMap.get(entry.getKey());
+                quests.add(quest);
+            }
+        }
+
+        return quests;
     }
 
 }

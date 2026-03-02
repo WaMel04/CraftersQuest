@@ -1,6 +1,7 @@
 package io.github.wamel04.crafters_quest.command;
 
 import io.github.wamel04.crafters_quest.CraftersQuestAPI;
+import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import io.github.wamel04.crafters_quest.quest.Quest;
 import io.github.wamel04.crafters_quest.quest.QuestState;
 import org.bukkit.Bukkit;
@@ -24,11 +25,11 @@ public class CMD_GetQuestState implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if (!sender.isOp()) {
-            sender.sendMessage("§c권한이 부족합니다.");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§c권한이 부족합니다.");
             return false;
         }
         if (args.length < 2) {
-            sender.sendMessage("§6/getquestate [닉네임] [퀘스트] §7- 플레이어의 퀘스트 상태를 가져옵니다.");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§f/getquestate [닉네임] [퀘스트] §7- 플레이어의 퀘스트 상태를 가져옵니다.");
             return false;
         }
 
@@ -38,7 +39,7 @@ public class CMD_GetQuestState implements TabExecutor {
         Player target = Bukkit.getPlayer(nick);
 
         if (!Quest.questMap.containsKey(questName)) {
-            sender.sendMessage("§e" + questName + " §6퀘스트는 존재하지 않습니다.");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§e" + questName + "§f은(는) 존재하지 않는 퀘스트입니다.");
             return false;
         }
         CompletableFuture.runAsync(() -> {
@@ -56,7 +57,7 @@ public class CMD_GetQuestState implements TabExecutor {
             QuestState questState = CraftersQuestAPI.getQuestState(uuid, questName).join();
 
             if (sender instanceof Player)
-                sender.sendMessage("§e" + nickname + " §6님의 §e" + questName + " §6퀘스트 상태는 §e" + questState.name() + "§6입니다.");
+                sender.sendMessage(CraftersQuestPlugin.PREFIX + "§7" + nickname + " §f님의 §6" + questName + " §f퀘스트 상태는 §e" + questState.name() + "§f입니다.");
         }).exceptionally(
                 ex -> {
                     ex.printStackTrace();

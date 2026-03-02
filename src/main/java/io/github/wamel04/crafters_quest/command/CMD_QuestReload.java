@@ -19,10 +19,15 @@ public class CMD_QuestReload implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+        if (!sender.isOp()) {
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§c권한이 부족합니다.");
+            return false;
+        }
+
         CraftersQuestPlugin.loadConfig();
 
-        sender.sendMessage("§6config를 리로드했습니다.");
-        sender.sendMessage("§6퀘스트, 아이템, npc 파일을 불러오고 있습니다...");
+        sender.sendMessage(CraftersQuestPlugin.PREFIX + "§fconfig를 리로드했습니다.");
+        sender.sendMessage(CraftersQuestPlugin.PREFIX + "§f퀘스트, 아이템, npc 파일을 불러오고 있습니다...");
 
         long startTime = System.currentTimeMillis();
 
@@ -42,7 +47,7 @@ public class CMD_QuestReload implements CommandExecutor {
                         .join();
             }
 
-            sender.sendMessage("§6성공적으로 파일들을 불러왔습니다! §7(경과 시간: " + (System.currentTimeMillis() - startTime) + "ms)");
+            sender.sendMessage(CraftersQuestPlugin.PREFIX + "§f성공적으로 파일들을 불러왔습니다! §7(경과 시간: " + (System.currentTimeMillis() - startTime) + "ms)");
         });
 
         return false;

@@ -1,8 +1,5 @@
 package io.github.wamel04.crafters_quest.quest.trigger_condition.list;
 
-import io.github.wamel04.crafters_quest.quest.Quest;
-import io.github.wamel04.crafters_quest.quest.QuestDataContainer;
-import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.ProgressTriggerCondition;
 import io.github.wamel04.crafters_quest.quest.trigger_condition.TriggerConditionType;
 import org.bukkit.ChatColor;
@@ -28,24 +25,18 @@ public class KillCondition extends ProgressTriggerCondition {
         EntityType type = event.getEntityType();
         String entityName = ChatColor.stripColor(event.getEntity().getName());
 
-        for (Quest quest : Quest.questMap.values()) {
-            for (QuestCondition questCondition : quest.getQuestConditionMap().values()) {
-                if (!questCondition.getTriggerCondition().getSymbol().equalsIgnoreCase(symbol))
-                    continue;
+        match(player, this, condStr -> {
+            String cEntityName = getFactorMap(condStr, "entityName", "amount").get("entityName");
 
-                String cEntityName = getFactorMap(questCondition.getTriggerConditionString(), "entityName", "amount").get("entityName");
-
-                if (cEntityName.equalsIgnoreCase(type.name()) || cEntityName.equals(entityName)) {
-                    QuestDataContainer.get(player.getUniqueId().toString())
-                            .thenAcceptAsync(questDataContainer -> questDataContainer.progressQuestCondition(player, questCondition))
-                            .exceptionally(ex -> {
-                                        ex.printStackTrace();
-                                        return null;
-                                    }
-                            );
-                }
+            if (cEntityName.equalsIgnoreCase(type.name())) {
+                return true;
             }
-        }
+            if (cEntityName.equalsIgnoreCase(entityName)) {
+                return true;
+            }
+
+            return false;
+        });
     }
 
 }

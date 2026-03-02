@@ -50,8 +50,12 @@ public class QuestConditionData {
         return Double.parseDouble(decimalFormat.format(percent));
     }
 
-    public void progress() {
-        currentProgress++;
+    public void progress(int count) {
+        currentProgress += count;
+    }
+
+    public void setCurrentProgress(int count) {
+        currentProgress = count;
     }
 
     public void complete() {
