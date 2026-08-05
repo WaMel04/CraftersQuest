@@ -1,7 +1,9 @@
 package io.github.wamel04.crafters_quest.operation.list;
 
+import io.github.wamel04.crafters_quest.CraftersQuestPlugin;
 import io.github.wamel04.crafters_quest.operation.Operation;
 import io.github.wamel04.crafters_quest.quest.quest_condition.QuestCondition;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -26,7 +28,9 @@ public class TitleOperation extends Operation {
             int fadein = Integer.parseInt(factorMap.get("fadein"));
             int fadeout = Integer.parseInt(factorMap.get("fadeout"));
 
-            player.sendTitle(title, subtitle, duration * 20, fadein, fadeout);
+            Bukkit.getScheduler().runTask(CraftersQuestPlugin.getInstance(), () -> {
+                player.sendTitle(title, subtitle, duration * 20, fadein, fadeout);
+            });
         }).exceptionally(ex -> {
                     ex.printStackTrace();
                     return null;
