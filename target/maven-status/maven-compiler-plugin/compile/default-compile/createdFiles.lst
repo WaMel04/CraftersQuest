@@ -25,6 +25,7 @@ io\github\wamel04\crafters_quest\operation\list\SendOperation.class
 io\github\wamel04\crafters_quest\command\CMD_SetQuestState.class
 io\github\wamel04\crafters_quest\quest\quest_condition\QuestCondition.class
 io\github\wamel04\crafters_quest\item\QuestItem.class
+io\github\wamel04\crafters_quest\quest\trigger_condition\list\CollectItemCondition$2.class
 io\github\wamel04\crafters_quest\quest\trigger_condition\list\ExitCondition$1.class
 io\github\wamel04\crafters_quest\command\CMD_Quest.class
 io\github\wamel04\crafters_quest\operation\Operation.class

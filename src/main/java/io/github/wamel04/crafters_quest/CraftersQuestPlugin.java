@@ -7,6 +7,7 @@ import io.github.wamel04.crafters_quest.config.ConfigManager$Item;
 import io.github.wamel04.crafters_quest.config.ConfigManager$Quest;
 import io.github.wamel04.crafters_quest.config.ConfigManager$QuestDataContainer;
 import io.github.wamel04.crafters_quest.file_util.FileManager;
+import io.github.wamel04.crafters_quest.item.QuestItem;
 import io.github.wamel04.crafters_quest.listener.NPCListener;
 import io.github.wamel04.crafters_quest.listener.PlayerListener;
 import io.github.wamel04.crafters_quest.operation.OperationRegister;
@@ -73,6 +74,9 @@ public final class CraftersQuestPlugin extends JavaPlugin {
     public void onDisable() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             ConfigManager$QuestDataContainer.save(player.getUniqueId().toString());
+        }
+        for (QuestItem questItem : QuestItem.questItemMap.values()) {
+            ConfigManager$Item.save(questItem);
         }
 
         ProtocolLibrary.getProtocolManager().removePacketListeners(this);

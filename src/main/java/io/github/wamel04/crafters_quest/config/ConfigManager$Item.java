@@ -67,41 +67,46 @@ public class ConfigManager$Item {
             }
         }
 
-        QuestItem questItem = new QuestItem(itemId, category, type, name, lore, customModelData, enchantments);
-        QuestItem.questItemMap.put(itemId, questItem);
+        return CompletableFuture.runAsync(() -> {
+            QuestItem questItem = new QuestItem(itemId, category, type, name, lore, customModelData, enchantments);
+            QuestItem.questItemMap.put(itemId, questItem);
 
-        if (!QuestItem.questItemCategories.contains(category))
-            QuestItem.questItemCategories.add(category);
+            if (!QuestItem.questItemCategories.contains(category))
+                QuestItem.questItemCategories.add(category);
 
-        return save(questItem);
+            save(questItem);
+        }).exceptionally(ex -> {
+           ex.printStackTrace();
+           return null;
+        });
     }
 
-    public static CompletableFuture<Void> save(QuestItem questItem) {
-        return CompletableFuture.runAsync(() -> {
-            String itemId = questItem.getId();
-            String category = questItem.getCategory();
-            Material type = questItem.getType();
-            String name = questItem.getName();
-            List<String> lore = questItem.getLore();
-            Integer customModelData = questItem.getCustomModelData();
-            List<String> enchantments = questItem.getEnchantments();
+    public static void save(QuestItem questItem) {
+        String itemId = questItem.getId();
+        String category = questItem.getCategory();
+        Material type = questItem.getType();
+        String name = questItem.getName();
+        List<String> lore = questItem.getLore();
+        Integer customModelData = questItem.getCustomModelData();
+        List<String> enchantments = questItem.getEnchantments();
 
-            File file = new File(plugin.getDataFolder() + "/items", category + ".yml");
-            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+        File file = new File(plugin.getDataFolder() + "/items", category + ".yml");
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
 
-            ConfigurationSection itemSection = yaml.createSection(itemId);
-            itemSection.set("type", type.toString());
-            itemSection.set("name", name);
-            itemSection.set("lore", lore);
-            itemSection.set("custom-model-data", customModelData);
-            itemSection.set("enchantments", enchantments);
+        ConfigurationSection itemSection = yaml.contains("itemId")
+                ? yaml.getConfigurationSection(itemId)
+                : yaml.createSection(itemId);
+        itemSection.set("type", type.toString());
+        itemSection.set("name", name);
+        itemSection.set("lore", lore);
+        itemSection.set("custom-model-data", customModelData);
+        itemSection.set("enchantments", enchantments);
 
-            try {
-                yaml.save(file);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            yaml.save(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

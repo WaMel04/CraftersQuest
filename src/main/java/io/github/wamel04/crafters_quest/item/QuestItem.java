@@ -87,7 +87,7 @@ public class QuestItem {
         return lore;
     }
 
-    public int getCustomModelData() {
+    public Integer getCustomModelData() {
         return customModelData;
     }
 
